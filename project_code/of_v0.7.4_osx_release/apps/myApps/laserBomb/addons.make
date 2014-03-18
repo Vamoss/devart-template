@@ -1,0 +1,6 @@
+ofxNetwork
+ofxOpenCv
+ofxOsc
+ofxXmlSettings
+ofxEtherdream
+ofxIlda
