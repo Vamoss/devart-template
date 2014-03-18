@@ -1,33 +1,47 @@
-# Project Title
-Insert the name of your project
+# Laser Bomb
+Information with Lasers
 
 ## Authors
-- Insert main author name, surname, github account
-- Insert other author(s) name, surname, github account (one per list element)
+- [Carlos Oliveira](http://www.vamoss.com.br): @vamoss
 
 ## Description
-Insert a description containing about 100 to 150 words, including your motivation and the meaning behind your idea and execution. The Judges will be keen to know how your idea pushes the boundaries of code and technology. 
+### Philosophy
+Laser Bomb puts you in control of laser power, it allows you to conquer surfaces that projectors can't.
 
-## Link to Prototype
-NOTE: If your project lives online you can add one or more links here. Make sure you have a stable version of your project running before linking it.
+It emmerges from the necessity of deliver information on streets during the riots in Rio de Janeiro. We already do projections with common projectors, but the light from the enviroment is always a problem. This effort is docummented at [Video Poster Livre](http://www.videoposterlivre.org/ "Video Poster Livre")
 
-[Example Link](http://www.google.com "Example Link")
+In other hand, we want to use this technology in other of ours project [Bicicletorama](http://www.bicicletorama.com.br "Bicicletorama"), we want convert the entirely game into a laser game.
 
-## Example Code
-NOTE: Wrap your code blocks or any code citation by using ``` like the example below.
-```
-function test() {
-  console.log("Printing a test");
-}
-```
+### Technical Information
+Technically it is a software that allows convert any computer image into a laser image.
+
+It captures the computer image, apply openCv technichs to extract the main shapes of image and than convert it to lines.
+
 ## Links to External Libraries
- NOTE: You can also use this space to link to external libraries or Github repositories you used on your project.
+### Software
+It uses knowed technologies as:
+- [Openframeworks](http://www.openframeworks.cc/ "Framework")
+- [OpenCV](http://opencv.org/ "OpenCV")
+- [ILDA](http://www.laserist.org/technical.htm "Protocol")
+- [ofxIlda](https://github.com/memo/ofxIlda "ILDA Addon for OpenFrameworks")
+- [ofxEtherdream](https://github.com/memo/ofxEtherdream "Ether-Dream Addon for OpenFrameworks")
+- [ofxSimpleGuiToo](https://github.com/memo/ofxSimpleGuiToo "Gui Addon for Openframeworks")
+- [ofxMSAInteractiveObject](https://github.com/memo/ofxMSAInteractiveObject "Flash-like Addon for Openframeworks")
 
-[Example Link](http://www.google.com "Example Link")
+Thanks [Memo Akten](http://www.memo.tv/) for the amazing Addons :) 
+
+### Hardware
+- [RBG Laser Projector]
+- [Etherdream](http://ether-dream.com/ "Extensible laser DAC")
+- [DB25 Cable]
+- [Mac Computer]
 
 ## Images & Videos
-NOTE: For additional images you can either use a relative link to an image on this repo or an absolute link to an externally hosted image.
+### Projection at Moinho
+![Projection at Moinho](http://vamoss.com.br/publico/laserBomb/1.jpg "Amout of light test")
 
-![Example Image](project_images/cover.jpg?raw=true "Example Image")
+### Hardware used
+![Hardware used](http://vamoss.com.br/publico/laserBomb/2.jpg "ILDA hardware compatibility")
 
-https://www.youtube.com/watch?v=30yGOxJJ2PQ
+### First video test
+[![First video test](http://vamoss.com.br/publico/laserBomb/3.png)](http://youtu.be/GOjMF8MDtUU)
