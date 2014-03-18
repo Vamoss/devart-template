@@ -17,4 +17,8 @@ public:
     void mousePressed(int x, int y, int button);
 
     ofxEtherdream etherdream;
+	
+	ofTexture	tex;
+	int captureWidth;
+	int captureHeight;
 };

@@ -3,6 +3,10 @@
 #include "ofxIldaRenderTarget.h"
 
 
+extern "C" {
+	#include "macGlutfix.h"
+}
+
 // VARS
 ofxIlda::RenderTarget ildaFbo;
 ofxIlda::Frame ildaFrame;
@@ -75,10 +79,28 @@ void testApp::setup(){
     gui.show();
     
     doFboClear = true;
+	
+	
+	captureWidth = ildaFbo.getWidth();
+	captureHeight = ildaFbo.getHeight();
+	tex.allocate(captureWidth, captureHeight, GL_RGBA);
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
+	unsigned char * data = pixelsBelowWindow(ofGetWindowPositionX(), ofGetWindowPositionY(), captureWidth, captureHeight);
+	
+	// now, let's get the R and B data swapped, so that it's all OK:
+	for (int i = 0; i < captureWidth * captureHeight; i++){
+		unsigned char r1 = data[i*4]; // mem A
+		data[i*4]   = data[i*4+1];
+		data[i*4+1] = data[i*4+2];
+		data[i*4+2] = data[i*4+3];
+		data[i*4+3] = r1;
+	}
+	
+	
+	if (data!= NULL) tex.loadData(data, captureWidth, captureHeight, GL_RGBA);
 }
 
 
@@ -100,6 +122,8 @@ void testApp::drawInFbo() {
         ofEllipse(mouseDownPos, brushThickness/2.0f/ildaFbo.getWidth(), brushThickness/2.0f/ildaFbo.getHeight());
         ofPopMatrix();*/
 		
+		tex.draw(0,0, captureWidth, captureHeight);
+		
         ofPushMatrix();
         ofSetColor(doDrawErase ? 0 : 255);
 		ofFill();
@@ -120,7 +144,7 @@ void testApp::drawInFbo() {
 
 //--------------------------------------------------------------
 void testApp::draw() {
-    // clear the current frame
+	// clear the current frame
     ildaFrame.clear();
     
     drawInFbo();    // draw stuff into the ildaRenderTarget
