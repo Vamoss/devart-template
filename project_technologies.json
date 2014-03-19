@@ -1,16 +1,19 @@
 {
     "technologies": {
-        "apis": [
-            "insert apis"
-        ],
         "platforms": [
-            "insert platforms"
+            "os x", "web"
         ],
         "toolkits": [
-            "insert toolkits"
-        ]
+            "openframeworks", "dart"
+        ],
+		"libraries": [
+            "ilda", "etherdream", "opencv", "glut"
+        ],
+		"languages": [
+			"c++", "c", "dart", "html"
+		]
     },
     "themes": [
-        "insert themes"
+        "projection", "laser", "UI"
     ]
 }
