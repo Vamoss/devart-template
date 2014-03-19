@@ -15,7 +15,7 @@ The result is amazing:
 
 ![Power Test](../project_images/3-power_test.gif?raw=true "Power Test")
 
-![Power Test 300m](../project_images/4-power_test_300m.jpg?raw=true "Power Test 300m")
+![Power Test 300m](../project_images/4-power_test_300m.png?raw=true "Power Test 300m")
 
 ![Power Test 1km](../project_images/5-power_test_1km.png?raw=true "Power Test 1km")
 
