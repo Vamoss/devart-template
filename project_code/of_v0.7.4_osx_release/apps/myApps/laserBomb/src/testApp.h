@@ -2,8 +2,9 @@
 
 #include "ofMain.h"
 #include "ofxEtherdream.h"
+#include "ofxWebServer.h"
 
-class testApp : public ofBaseApp{
+class testApp : public ofBaseApp, public ofxWSRequestHandler{
     
 public:
     void setup();
@@ -21,4 +22,11 @@ public:
 	ofTexture	tex;
 	int captureWidth;
 	int captureHeight;
+	
+	
+	//webServer
+	ofxWebServer server;
+	void httpGet(string url);
+	void httpPost(string url, char *data, int dataLength);
+	vector<ofxIlda::Poly> receivedData;
 };

@@ -84,6 +84,14 @@ void testApp::setup(){
 	captureWidth = ildaFbo.getWidth();
 	captureHeight = ildaFbo.getHeight();
 	tex.allocate(captureWidth, captureHeight, GL_RGBA);
+	
+	ildaFrame.params.output.transform.doFlipX = true;
+	ildaFrame.params.output.transform.doFlipY = true;
+	
+	//webServer
+	server.start("httpdocs");
+	server.addHandler(this, "actions*");
+
 }
 
 //--------------------------------------------------------------
@@ -114,7 +122,8 @@ void testApp::drawInFbo() {
         ofClear(0);
     }
     if(ofGetMousePressed() &&  mouseDownPos.x >= 0) {
-        /*ofPushMatrix();
+        //original
+		/*ofPushMatrix();
         ofScale(ildaFbo.getWidth(), ildaFbo.getHeight(), 1);
         ofSetColor(doDrawErase ? 0 : 255);
         ofSetLineWidth(brushThickness);
@@ -122,9 +131,12 @@ void testApp::drawInFbo() {
         ofEllipse(mouseDownPos, brushThickness/2.0f/ildaFbo.getWidth(), brushThickness/2.0f/ildaFbo.getHeight());
         ofPopMatrix();*/
 		
-		tex.draw(0,0, captureWidth, captureHeight);
 		
-        ofPushMatrix();
+		//screen capture
+		//tex.draw(0,0, captureWidth, captureHeight);
+		
+		//custom draw
+        /*ofPushMatrix();
         ofSetColor(doDrawErase ? 0 : 255);
 		ofFill();
         ofCircle(mouseDownPos.x*ildaFbo.getWidth(), mouseDownPos.y*ildaFbo.getHeight(), brushThickness/2.0f);
@@ -132,7 +144,7 @@ void testApp::drawInFbo() {
         //ofSetLineWidth(brushThickness*8.0f);
         //ofLine(mouseDownPos.x*ildaFbo.getWidth(),		mouseDownPos.y*ildaFbo.getHeight(),
 		//	   lastMouseDownPos.x*ildaFbo.getWidth(),	lastMouseDownPos.y*ildaFbo.getHeight());
-        ofPopMatrix();
+        ofPopMatrix();*/
     }
 	
     ildaFbo.end();
@@ -144,6 +156,7 @@ void testApp::drawInFbo() {
 
 //--------------------------------------------------------------
 void testApp::draw() {
+	/*
 	// clear the current frame
     ildaFrame.clear();
     
@@ -151,7 +164,56 @@ void testApp::draw() {
     ildaFbo.update(ildaFrame);  // vectorize and update the ildaFrame
     
     ildaFrame.update();
+	 */
     
+	
+	//custom shape test using ildaFrame
+	/*
+	ildaFrame.clear();
+	ofxIlda::Poly &poly = ildaFrame.addPoly(ofxIlda::Poly(ofColor(100,100,0)));
+	poly.lineTo(0.1f,0.0f);
+	poly.lineTo(0.1f,0.1f);
+	poly.lineTo(0.0f,0.1f);
+	poly.close();
+	ofxIlda::Poly &poly2 = ildaFrame.addPoly(ofxIlda::Poly(ofColor(100,0,0)));
+	poly2.lineTo(0.2f,0.0f);
+	poly2.lineTo(0.2f,0.2f);
+	poly2.lineTo(0.0f,0.2f);
+	poly2.close();
+	ofxIlda::Poly &poly3 = ildaFrame.addPoly(ofxIlda::Poly(ofColor(0,0,100)));
+	poly3.lineTo(0.4f,0.0f);
+	poly3.lineTo(0.4f,0.4f);
+	poly3.lineTo(0.0f,0.4f);
+	poly3.close();
+	ofxIlda::Poly &poly4 = ildaFrame.addPoly(ofxIlda::Poly(ofColor(0,100,0)));
+	poly4.lineTo(0.8f,0.0f);
+	poly4.lineTo(0.8f,0.8f);
+	poly4.lineTo(0.0f,0.8f);
+	poly4.close();
+	ildaFrame.update();
+    etherdream.setPoints(ildaFrame);
+	*/
+	
+	/*
+	//NOT WORKING
+	//custom shape test NOT using ildaFrame
+	vector<ofxIlda::Point> origPolys;
+	origPolys.push_back(ofxIlda::Point(ofPoint(0.1f,0.0f), ofColor(100,100,0)));
+	origPolys.push_back(ofxIlda::Point(ofPoint(0.1f,0.1f), ofColor(100,100,0)));
+	origPolys.push_back(ofxIlda::Point(ofPoint(0.0f,0.1f), ofColor(100,100,0)));
+	origPolys.push_back(ofxIlda::Point(ofPoint(0.0f,0.0f), ofColor(100,100,0)));
+	origPolys.push_back(ofxIlda::Point(ofPoint(0.2f,0.0f), ofColor(100,0,0)));
+	origPolys.push_back(ofxIlda::Point(ofPoint(0.2f,0.2f), ofColor(100,0,0)));
+	origPolys.push_back(ofxIlda::Point(ofPoint(0.0f,0.2f), ofColor(100,0,0)));
+	origPolys.push_back(ofxIlda::Point(ofPoint(0.0f,0.0f), ofColor(100,0,0)));
+	etherdream.setPoints(origPolys);
+	*/
+	
+	//webService
+	ildaFrame.clear();
+	ildaFrame.addPolys(receivedData);
+	ildaFrame.update();
+	
     int dw = ofGetWidth()/2;
     int dh = dw;
     int dx = ofGetWidth() - dw;
@@ -173,8 +235,8 @@ void testApp::draw() {
     ofNoFill();
     ofSetColor(255, 128);
     ofCircle(ofGetMouseX(), ofGetMouseY(), r);
-    
-    gui.draw();
+	 
+	gui.draw();
 }
 
 
@@ -205,4 +267,40 @@ void testApp::mousePressed(int x, int y, int button){
     mouseDownPos.x = ofMap(x, ofGetWidth()/2, ofGetWidth(), 0, 1);
     mouseDownPos.y = ofMap(y, 0, ofGetWidth()/2, 0, 1);
     lastMouseDownPos = mouseDownPos;
+}
+
+
+
+//webServer
+void testApp::httpGet(string url) {
+	string colorString = getRequestParameter("color");
+	cout << colorString << endl;
+	httpResponse("Color value: "
+				 + colorString);
+}
+
+void testApp::httpPost(string url, char *data, int dataLength) {
+	//cout << "url: " << url << endl;
+	//cout << "data: " << data << endl;
+	//cout << "dataLength: " << dataLength << endl;
+	
+	//protocol
+	//r,g,b,x,y,x,y,x,y,x,y_r,g,b,x,y,x,y,x,y_r,g,b,x,y,x,y,x,y
+	string str(data, data + dataLength);
+	vector< string > groupValues = ofSplitString(str,"_");
+	receivedData.clear();
+	float x,y;
+	for(int j=0;j<groupValues.size();j++){
+		vector< string > values = ofSplitString(groupValues[j],",");
+		if(values.size()<5) continue;
+		ofxIlda::Poly poly = ofxIlda::Poly(ofColor(ofToInt(values[0]),ofToInt(values[1]),ofToInt(values[2])));
+		for(int i=3;i<values.size();i+=2){
+			x=ofToFloat(values[i]);
+			y=ofToFloat(values[i+1]);
+			poly.lineTo(x, y);
+		}
+		receivedData.push_back(poly);
+	}
+	
+	httpResponse("OK");
 }
