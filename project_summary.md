@@ -3,6 +3,7 @@ Information with Lasers
 
 ## Authors
 - [Carlos Oliveira](http://www.vamoss.com.br): @vamoss
+- [Harrison Mendonça](http://www.harrison.com.br): @euharrison
 
 ## Description
 ### Philosophy
@@ -12,14 +13,13 @@ It emmerges from the necessity of deliver information on streets during the riot
 
 In other hand, we want to use this technology in other of ours project [Bicicletorama](http://www.bicicletorama.com.br "Bicicletorama"), we want convert the entirely game into a laser game.
 
-### Technical Information
+## Technical Information
 Technically it is a software that allows convert any computer image into a laser image.
 
 It captures the computer image, apply openCv technichs to extract the main shapes of image and than convert it to lines.
 
-## Links to External Libraries
 ### Software
-It uses knowed technologies as:
+#### Render
 - [Openframeworks](http://www.openframeworks.cc/ "Framework")
 - [OpenCV](http://opencv.org/ "OpenCV")
 - [ILDA](http://www.laserist.org/technical.htm "Protocol")
@@ -30,11 +30,15 @@ It uses knowed technologies as:
 
 Thanks [Memo Akten](http://www.memo.tv/) for the amazing Addons :) 
 
+#### WebAPP
+- [Dart](https://www.dartlang.org "Dart")
+
 ### Hardware
 - [RBG Laser Projector]
 - [Etherdream](http://ether-dream.com/ "Extensible laser DAC")
 - [DB25 Cable]
 - [Mac Computer]
+- [Modern Web Browser]
 
 ## Images & Videos
 ### Projection at Moinho
