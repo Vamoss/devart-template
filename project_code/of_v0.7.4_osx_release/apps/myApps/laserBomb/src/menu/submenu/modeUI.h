@@ -15,7 +15,6 @@ public:
         setGUI1();
         
         gui1->loadSettings("GUI/settings.xml");
-        gui1->setVisible(true);
     }
     
 	
@@ -53,83 +52,6 @@ public:
         string name = e.widget->getName();
         int kind = e.widget->getKind();
         cout << "got event from: " << name << endl;
-        
-        if(name == "PARTICLES")
-        {
-            ofxUISlider *slider = (ofxUISlider *) e.widget;
-			//server::send(name, slider->getScaledValue());
-        }
-		else if(name == "PROBABILITY")
-		{
-			ofxUISlider *slider = (ofxUISlider *) e.widget;
-			//server::send(name, slider->getScaledValue());
-		}
-        else if(name == "SPRING")
-        {
-			ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
-			//server::send(name, toggle->getValue());
-        }
-        else if(name == "ATTRACT")
-        {
-			ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
-			//server::send(name, toggle->getValue());
-        }
-		else if(name == "STRENGHT")
-		{
-			ofxUIRangeSlider *slider = (ofxUIRangeSlider *) e.widget;
-			//server::send(name, slider->getScaledValueLow(), slider->getScaledValueHigh());
-		}
-		else if(name == "ORBIT")
-		{
-			ofxUIRangeSlider *slider = (ofxUIRangeSlider *) e.widget;
-			//server::send(name, slider->getScaledValueLow(), slider->getScaledValueHigh());
-		}
-        else if(name == "SHAKE")
-        {
-			//server::send(name);
-        }
-        else if(name == "RESTART")
-        {
-			//server::send(name);
-		}
-		else if(name == "COLLISION")
-		{
-			ofxUIToggle *toggle = (ofxUIToggle *) e.widget;
-			//server::send(name, toggle->getValue());
-		}
-		else if(name == "MASS")
-		{
-			ofxUIRangeSlider *slider = (ofxUIRangeSlider *) e.widget;
-			//server::send(name, slider->getScaledValueLow(), slider->getScaledValueHigh());
-		}
-		else if(name == "GRAVITY")
-		{
-			ofxUISlider *slider = (ofxUISlider *) e.widget;
-			//server::send(name, slider->getScaledValue());
-		}
-		else if(name == "BOUNCE")
-		{
-			ofxUIRangeSlider *slider = (ofxUIRangeSlider *) e.widget;
-			//server::send(name, slider->getScaledValueLow(), slider->getScaledValueHigh());
-		}
-		else if(name == "CENTER")
-		{
-			((ofxUISlider *)gui1->getWidget("GRAVITY"))->setValue(0);
-			//server::send("GRAVITY", 0.0f);
-		}
-        else if(name == "SAVE")
-        {
-            save();
-        }
-	}
-	
-	void setParticles(float percent)
-	{
-		ofxUISlider *slider = (ofxUISlider *) gui1->getWidget("PARTICLES");
-		if(percent != slider->getValue()){
-			slider->setValue(percent * slider->getMax());
-			//server::send("PARTICLES", slider->getScaledValue());
-		}
 	}
     
     void save()

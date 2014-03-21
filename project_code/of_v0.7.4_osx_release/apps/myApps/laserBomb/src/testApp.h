@@ -4,7 +4,6 @@
 #include "ofxEtherdream.h"
 #include "ofxWebServer.h"
 #include "menu.h"
-#include "ofxSimpleGuiToo.h"
 #include "ofxIldaRenderTarget.h"
 
 class testApp : public ofBaseApp, public ofxWSRequestHandler{

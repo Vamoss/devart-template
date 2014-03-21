@@ -15,7 +15,6 @@ public:
         setGUI1();
         
         gui1->loadSettings("GUI/settings.xml");
-        gui1->setVisible(true);
     }
     
 	

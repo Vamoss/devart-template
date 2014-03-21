@@ -22,56 +22,6 @@ void testApp::setup(){
 	
 	m_menu = new menu();
 	m_menu->setup(&ildaFbo, &ildaFrame);
-	
-    gui.addTitle("INPUT");
-    gui.addToggle("doFboClear c", doFboClear);
-    gui.addToggle("doDrawErase x", doDrawErase);
-    gui.addSlider("brushThickness", brushThickness, 1, 50);
-    
-    gui.addTitle("CV");
-    gui.addSlider("cv.blurAmount", ildaFbo.params.cv.blurAmount, 0, 20);
-    gui.addSlider("cv.bottomThreshold", ildaFbo.params.cv.bottomThreshold, 0, 20);
-    gui.addSlider("cv.thresholdAmount", ildaFbo.params.cv.thresholdAmount, 0, 255);
-    gui.addSlider("adaptiveThresholdAmount", ildaFbo.params.cv.adaptiveThresholdAmount, 0, 50);
-    gui.addSlider("cv.adaptiveThresholdBlock", ildaFbo.params.cv.adaptiveThresholdBlock, 0, 10);
-    gui.addSlider("cv.erodeAmount", ildaFbo.params.cv.erodeAmount, 0, 20);
-    gui.addToggle("cv.doCanny", ildaFbo.params.cv.doCanny);
-    gui.addSlider("cv.cannyThresh1", ildaFbo.params.cv.cannyThresh1, 0, 10);
-    gui.addSlider("cv.cannyThresh2", ildaFbo.params.cv.cannyThresh2, 0, 10);
-    gui.addSlider("cv.cannyWindow", ildaFbo.params.cv.cannyWindow, 1, 3);
-    gui.addToggle("cv.doFindHoles", ildaFbo.params.cv.doFindHoles);
-    
-    gui.addTitle("PATH PROCESSING");
-    gui.addSlider("path.smoothAmount", ildaFrame.polyProcessor.params.smoothAmount, 0, 100);
-    gui.addToggle("path.contourCollapse", ildaFrame.polyProcessor.params.collapse);
-    gui.addSlider("path.optimizeTolerance", ildaFrame.polyProcessor.params.optimizeTolerance, 0, 1);
-    gui.addSlider("path.targetPointCount", ildaFrame.polyProcessor.params.targetPointCount, 0, 5000);
-    gui.addSlider("path.spacing", ildaFrame.polyProcessor.params.spacing, 0, 1);
-    gui.addSlider("stats.pointCountOrig", ildaFrame.stats.pointCountOrig, 0, 10000);
-    gui.addSlider("stats.pointCountProcessed", ildaFrame.stats.pointCountProcessed, 0, 10000);
-    
-    gui.addTitle("DISPLAY");
-    gui.addToggle("doDrawFbo", ildaFbo.params.draw.fbo);
-    gui.addSlider("fboAlpha", ildaFbo.params.draw.fboAlpha, 0, 255);
-    gui.addToggle("doDrawLineRaw", ildaFbo.params.draw.linesRaw);
-    gui.addToggle("doDrawIldaLines", ildaFrame.params.draw.lines);
-    gui.addToggle("doDrawIldaPoints", ildaFrame.params.draw.points);
-    gui.addToggle("doDrawIldaPointNumbers", ildaFrame.params.draw.pointNumbers);
-    
-    gui.addTitle("OUTPUT");
-    gui.addColorPicker("color", ildaFrame.params.output.color);
-    gui.addSlider("blankCount", ildaFrame.params.output.blankCount, 0, 100);
-    gui.addSlider("endCount", ildaFrame.params.output.endCount, 0, 100);
-    gui.addToggle("doCapX", ildaFrame.params.output.doCapX);
-    gui.addToggle("doCapY", ildaFrame.params.output.doCapY);
-    
-    gui.addTitle("");
-    gui.addContent("fbo", ildaFbo.getFbo());
-    gui.addContent("greyImage", ildaFbo.getGreyImage());
-    
-    gui.setDefaultKeys(true);
-    gui.loadFromXML();
-    gui.show();
     
     doFboClear = true;
 	
@@ -79,6 +29,10 @@ void testApp::setup(){
 	captureWidth = ildaFbo.getWidth();
 	captureHeight = ildaFbo.getHeight();
 	tex.allocate(captureWidth, captureHeight, GL_RGBA);
+	
+	
+	ildaFbo.params.draw.fbo = true;
+    ildaFbo.params.draw.fboAlpha = 255;
 	
 	ildaFrame.params.output.transform.doFlipX = true;
 	ildaFrame.params.output.transform.doFlipY = true;
@@ -88,6 +42,9 @@ void testApp::setup(){
 	server.addHandler(this, "actions*");
 	
 	layoutResize();
+	
+	
+	brushThickness = 10;//50
 
 }
 
@@ -158,6 +115,7 @@ void testApp::drawInFbo() {
 //--------------------------------------------------------------
 void testApp::draw() {
 	
+	ofSetColor(255);
 	logo.draw(logoX,10);
 	
 	// clear the current frame
@@ -239,7 +197,6 @@ void testApp::draw() {
     ofCircle(ofGetMouseX(), ofGetMouseY(), r);
 	ofPopStyle();
 	
-	gui.draw();
 	m_menu->draw();
 }
 
