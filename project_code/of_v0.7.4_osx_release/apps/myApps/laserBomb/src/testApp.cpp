@@ -1,82 +1,27 @@
 #include "testApp.h"
-#include "ofxSimpleGuiToo.h"
-#include "ofxIldaRenderTarget.h"
 
 
 extern "C" {
 	#include "macGlutfix.h"
 }
 
-// VARS
-ofxIlda::RenderTarget ildaFbo;
-ofxIlda::Frame ildaFrame;
-
-ofVec2f mouseDownPos;   // position of mouse (normalized)
-ofVec2f lastMouseDownPos; // last position of mouse (normalized)
-
-// PARAMS
-bool doFboClear;
-bool doDrawErase;   // whether we are erasing (true) or drawing (erase)
-int brushThickness;
-
 //--------------------------------------------------------------
 void testApp::setup(){
-    ofBackground(100);
+	
+	//UI
+	ofEnableAlphaBlending();
+    ofBackground(78);
+	logoX = 0;
+	logo.loadImage("gui/images/logo.png");
+	fboPosition.y = 60;
     
     etherdream.setup();
     etherdream.setPPS(20000);
     
     ildaFbo.setup(512, 512);
-    
-    gui.addTitle("INPUT");
-    gui.addToggle("doFboClear c", doFboClear);
-    gui.addToggle("doDrawErase x", doDrawErase);
-    gui.addSlider("brushThickness", brushThickness, 1, 50);
-    
-    gui.addTitle("CV");
-    gui.addSlider("cv.blurAmount", ildaFbo.params.cv.blurAmount, 0, 20);
-    gui.addSlider("cv.bottomThreshold", ildaFbo.params.cv.bottomThreshold, 0, 20);
-    gui.addSlider("cv.thresholdAmount", ildaFbo.params.cv.thresholdAmount, 0, 255);
-    gui.addSlider("adaptiveThresholdAmount", ildaFbo.params.cv.adaptiveThresholdAmount, 0, 50);
-    gui.addSlider("cv.adaptiveThresholdBlock", ildaFbo.params.cv.adaptiveThresholdBlock, 0, 10);
-    gui.addSlider("cv.erodeAmount", ildaFbo.params.cv.erodeAmount, 0, 20);
-    gui.addToggle("cv.doCanny", ildaFbo.params.cv.doCanny);
-    gui.addSlider("cv.cannyThresh1", ildaFbo.params.cv.cannyThresh1, 0, 10);
-    gui.addSlider("cv.cannyThresh2", ildaFbo.params.cv.cannyThresh2, 0, 10);
-    gui.addSlider("cv.cannyWindow", ildaFbo.params.cv.cannyWindow, 1, 3);
-    gui.addToggle("cv.doFindHoles", ildaFbo.params.cv.doFindHoles);
-    
-    gui.addTitle("PATH PROCESSING");
-    gui.addSlider("path.smoothAmount", ildaFrame.polyProcessor.params.smoothAmount, 0, 100);
-    gui.addToggle("path.contourCollapse", ildaFrame.polyProcessor.params.collapse);
-    gui.addSlider("path.optimizeTolerance", ildaFrame.polyProcessor.params.optimizeTolerance, 0, 1);
-    gui.addSlider("path.targetPointCount", ildaFrame.polyProcessor.params.targetPointCount, 0, 5000);
-    gui.addSlider("path.spacing", ildaFrame.polyProcessor.params.spacing, 0, 1);
-    gui.addSlider("stats.pointCountOrig", ildaFrame.stats.pointCountOrig, 0, 10000);
-    gui.addSlider("stats.pointCountProcessed", ildaFrame.stats.pointCountProcessed, 0, 10000);
-    
-    gui.addTitle("DISPLAY");
-    gui.addToggle("doDrawFbo", ildaFbo.params.draw.fbo);
-    gui.addSlider("fboAlpha", ildaFbo.params.draw.fboAlpha, 0, 255);
-    gui.addToggle("doDrawLineRaw", ildaFbo.params.draw.linesRaw);
-    gui.addToggle("doDrawIldaLines", ildaFrame.params.draw.lines);
-    gui.addToggle("doDrawIldaPoints", ildaFrame.params.draw.points);
-    gui.addToggle("doDrawIldaPointNumbers", ildaFrame.params.draw.pointNumbers);
-    
-    gui.addTitle("OUTPUT");
-    gui.addColorPicker("color", ildaFrame.params.output.color);
-    gui.addSlider("blankCount", ildaFrame.params.output.blankCount, 0, 100);
-    gui.addSlider("endCount", ildaFrame.params.output.endCount, 0, 100);
-    gui.addToggle("doCapX", ildaFrame.params.output.doCapX);
-    gui.addToggle("doCapY", ildaFrame.params.output.doCapY);
-    
-    gui.addTitle("");
-    gui.addContent("fbo", ildaFbo.getFbo());
-    gui.addContent("greyImage", ildaFbo.getGreyImage());
-    
-    gui.setDefaultKeys(true);
-    gui.loadFromXML();
-    gui.show();
+	
+	m_menu = new menu();
+	m_menu->setup(&ildaFbo, &ildaFrame);
     
     doFboClear = true;
 	
@@ -85,12 +30,21 @@ void testApp::setup(){
 	captureHeight = ildaFbo.getHeight();
 	tex.allocate(captureWidth, captureHeight, GL_RGBA);
 	
+	
+	ildaFbo.params.draw.fbo = true;
+    ildaFbo.params.draw.fboAlpha = 255;
+	
 	ildaFrame.params.output.transform.doFlipX = true;
 	ildaFrame.params.output.transform.doFlipY = true;
 	
 	//webServer
 	server.start("httpdocs");
 	server.addHandler(this, "actions*");
+	
+	layoutResize();
+	
+	
+	brushThickness = 10;//50
 
 }
 
@@ -109,6 +63,8 @@ void testApp::update(){
 	
 	
 	if (data!= NULL) tex.loadData(data, captureWidth, captureHeight, GL_RGBA);
+	
+	m_menu->update();
 }
 
 
@@ -136,15 +92,17 @@ void testApp::drawInFbo() {
 		//tex.draw(0,0, captureWidth, captureHeight);
 		
 		//custom draw
-        /*ofPushMatrix();
-        ofSetColor(doDrawErase ? 0 : 255);
+        ofPushMatrix();
+        ofPushStyle();
+		ofSetColor(doDrawErase ? 0 : 255);
 		ofFill();
         ofCircle(mouseDownPos.x*ildaFbo.getWidth(), mouseDownPos.y*ildaFbo.getHeight(), brushThickness/2.0f);
 		ofNoFill();
         //ofSetLineWidth(brushThickness*8.0f);
         //ofLine(mouseDownPos.x*ildaFbo.getWidth(),		mouseDownPos.y*ildaFbo.getHeight(),
 		//	   lastMouseDownPos.x*ildaFbo.getWidth(),	lastMouseDownPos.y*ildaFbo.getHeight());
-        ofPopMatrix();*/
+		ofPopStyle();
+        ofPopMatrix();
     }
 	
     ildaFbo.end();
@@ -156,7 +114,10 @@ void testApp::drawInFbo() {
 
 //--------------------------------------------------------------
 void testApp::draw() {
-	/*
+	
+	ofSetColor(255);
+	logo.draw(logoX,10);
+	
 	// clear the current frame
     ildaFrame.clear();
     
@@ -164,8 +125,7 @@ void testApp::draw() {
     ildaFbo.update(ildaFrame);  // vectorize and update the ildaFrame
     
     ildaFrame.update();
-	 */
-    
+	
 	
 	//custom shape test using ildaFrame
 	/*
@@ -210,14 +170,14 @@ void testApp::draw() {
 	*/
 	
 	//webService
-	ildaFrame.clear();
+	/*ildaFrame.clear();
 	ildaFrame.addPolys(receivedData);
-	ildaFrame.update();
+	ildaFrame.update();*/
 	
-    int dw = ofGetWidth()/2;
-    int dh = dw;
-    int dx = ofGetWidth() - dw;
-    int dy = 0;
+    int dw = fboPosition.width;
+    int dh = fboPosition.height;
+    int dx = fboPosition.x;
+    int dy = fboPosition.y;
 
     ildaFbo.draw(dx, dy, dw, dh);
     
@@ -227,7 +187,7 @@ void testApp::draw() {
     etherdream.setPoints(ildaFrame);
     
     // draw cursor
-    ofEnableAlphaBlending();
+    ofPushStyle();
     ofFill();
     ofSetColor(doDrawErase ? 0 : 255, 128);
     float r = brushThickness/2 * ofGetWidth() /2 / ildaFbo.getWidth();
@@ -235,8 +195,9 @@ void testApp::draw() {
     ofNoFill();
     ofSetColor(255, 128);
     ofCircle(ofGetMouseX(), ofGetMouseY(), r);
-	 
-	gui.draw();
+	ofPopStyle();
+	
+	m_menu->draw();
 }
 
 
@@ -258,15 +219,43 @@ void testApp::keyPressed(int key){
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
     lastMouseDownPos = mouseDownPos;
-    mouseDownPos.x = ofMap(x, ofGetWidth()/2, ofGetWidth(), 0, 1);
-    mouseDownPos.y = ofMap(y, 0, ofGetWidth()/2, 0, 1);
+    mouseDownPos.x = ofMap(x, fboPosition.x, fboPosition.x+fboPosition.width, 0, 1);
+    mouseDownPos.y = ofMap(y, fboPosition.y, fboPosition.y+fboPosition.height, 0, 1);
 }
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-    mouseDownPos.x = ofMap(x, ofGetWidth()/2, ofGetWidth(), 0, 1);
-    mouseDownPos.y = ofMap(y, 0, ofGetWidth()/2, 0, 1);
+    mouseDownPos.x = ofMap(x, fboPosition.x, fboPosition.x+fboPosition.width, 0, 1);
+    mouseDownPos.y = ofMap(y, fboPosition.y, fboPosition.y+fboPosition.height, 0, 1);
     lastMouseDownPos = mouseDownPos;
+}
+
+//--------------------------------------------------------------
+void testApp::windowResized(int w, int h){
+	layoutResize();
+}
+
+//--------------------------------------------------------------
+void testApp::layoutResize(){
+	int w = ofGetWidth();
+	int h = ofGetHeight();
+	
+	fboPosition.height = h-60;
+	fboPosition.width = fboPosition.height;
+	
+	int subPanelWidth = ofMap(ofGetWidth(), 800, 1920, 200, 400);
+	
+	int finalWidth = 60 + fboPosition.width + subPanelWidth;
+	if(finalWidth>w){
+		fboPosition.width = w - 60 - subPanelWidth;
+		fboPosition.height = fboPosition.width;
+		finalWidth = 60 + fboPosition.width + subPanelWidth;
+	}
+	
+	logoX = (w-finalWidth)/2;
+	m_menu->setX(logoX);
+	
+	fboPosition.x = logoX+60;
 }
 
 
