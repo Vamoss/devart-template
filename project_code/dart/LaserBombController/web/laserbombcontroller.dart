@@ -1,117 +1,146 @@
 import 'dart:html';
-import 'dart:convert';
 
 
-//protocol
+// protocol
 // x,y,x,y,x,y,x,y_x,y,x,y,x,y_x,y,x,y,x,y;
 
-var shapes = [];
+var shapes = new List<Shape>();
 var dragging = false;
 
+var currentColor = new Color(255, 255, 255);
+ 
 var canvasRect;
 final CanvasRenderingContext2D context = (querySelector("#canvas") as CanvasElement).context2D;
 
+//-----------------------------------
+class Point {
+  
+  var x,y;
+  
+  Point(x ,y) {
+    this.x = x;
+    this.y = y;
+  }
+}
 
-class Shape {
+//-----------------------------------
+class Color {
   
   var r,g,b;
-  var coords;
+  var stringFormat;
   
-  void begin(r,g,b,x,y) {
+  Color(r, g, b) {
     this.r = r;
     this.g = g;
     this.b = b;
-    coords = [x,y];
+    stringFormat = r.toString()+","+g.toString()+","+b.toString();
   }
-  
-  void add(x,y) {
-    coords..add(x)..add(y);
-  }
-  
-  String toString() {
-    var s = r.toString()+","+g.toString()+","+b.toString();
-    for (var i = 0, total = coords.length; i < total; i++) {
-      s += ","+(coords[i]/canvasRect.width).toString();
-    }
-    return s;
-  }
-  
-  String getColor() {
-    var s = r.toString()+","+g.toString()+","+b.toString();
-    return s;
-  }
-  
 }
 
+//-----------------------------------
+class Shape {
+  
+  var color;
+  var coords = new List<Point>();
+  var stringFormat;
+  
+  Shape(color, x, y) {
+    this.color = color;
+    stringFormat = color.stringFormat;
+    add(x,y);
+  }
+  
+  void add(x, y) {
+    coords.add(new Point(x ,y));
+    stringFormat += ","+(x/canvasRect.width).toString()+","+(y/canvasRect.height).toString();
+  }
+}
+
+//-----------------------------------
 void main() {
 
   canvasRect = context.canvas.getBoundingClientRect();
 
-  context.canvas.onMouseDown.listen(onMouseDown);
-  context.canvas.onMouseUp.listen(onMouseUp);
-  context.canvas.onMouseMove.listen(onMouseMove);
+  context.canvas..onMouseDown.listen(onMouseDown)
+      ..onMouseMove.listen(onMouseMove)
+      ..onMouseUp.listen(onMouseUp)
+      ..onMouseOut.listen(onMouseUp);
+  querySelector("body").onMouseUp.listen(onMouseUp);
 
-  draw();  
+  querySelector("#colors").onClick.listen(onClickColor);
+  querySelector("#clean").onClick.listen(onClickClean);
+
+  clean();
+}
+
+void clean() {
+  shapes = [];
+  draw();
+  send();
 }
 
 void draw() {
-  context.clearRect(0, 0, 300, 300);
+  context.clearRect(0, 0, canvasRect.width, canvasRect.height);
   for (var i = 0; i < shapes.length; i++) {
     drawShape(shapes[i]);
   }
 }
 
-void drawShape(coords) {
+void drawShape(Shape s) {
+  if (s.color.r == 0 && s.color.g == 0 && s.color.b == 0) return;
+  
   context..beginPath()
          ..lineWidth = 2
-         ..strokeStyle = "#3333ff"
-         ..moveTo(coords[0], coords[1]);
+         ..strokeStyle = "rgb("+s.color.stringFormat+")"
+         ..moveTo(s.coords[0].x, s.coords[0].y);
          
-  for (var i = 1, total = coords.length/2; i < total; i++) {
-    context.lineTo(coords[i*2], coords[i*2+1]);
+  for (var i = 1, total = s.coords.length; i < total; i++) {
+    context.lineTo(s.coords[i].x, s.coords[i].y);
   }
   
   context.stroke();
 }
 
-void drawShape2(Shape s) {
-  context..beginPath()
-         ..lineWidth = 2
-         ..strokeStyle = "#3333ff"
-         ..moveTo(coords[0], coords[1]);
-         
-  for (var i = 1, total = coords.length/2; i < total; i++) {
-    context.lineTo(coords[i*2], coords[i*2+1]);
+void newShape(x, y) {
+  if (shapes.length > 0) {
+    var lastPoint = shapes.last.coords.last;
+    shapes.add(new Shape(new Color(0,0,0), lastPoint.x, lastPoint.y));
+    shapes.last.add(x, y);
   }
-  
-  context.stroke();
+  shapes.add(new Shape(currentColor, x, y));
 }
 
-void beginShape(x, y) {
-  shapes.add([x,y]);
-}
-
-void addPoint(x,y) {
-  shapes.last..add(x)..add(y);
+void addPoint(x, y) {
+  shapes.last.add(x,y);
   draw();
   send();
 }
 
-void onMouseDown(e) {
+void onMouseDown(MouseEvent e) {
   dragging = true;
-  beginShape(e.clientX-canvasRect.left, e.clientY-canvasRect.top);
+  newShape(e.client.x-canvasRect.left, e.client.y-canvasRect.top);
 }
 
-void onMouseUp(e) {
-  dragging = false;
-  //send();
-}
-
-void onMouseMove(e) {  
+void onMouseMove(MouseEvent e) {  
   if (dragging) {
-    addPoint(e.clientX-canvasRect.left, e.clientY-canvasRect.top);
+    addPoint(e.client.x-canvasRect.left, e.client.y-canvasRect.top);
   }
 }
+
+void onMouseUp(MouseEvent e) {
+  dragging = false;
+}
+
+void onClickColor(MouseEvent e) {
+  var data = (e.target as Element).dataset;
+  currentColor = new Color(data["r"], data["g"], data["b"]);
+}
+
+void onClickClean(MouseEvent e) {
+  clean();
+}
+
+
 
 void send() {
   HttpRequest request = new HttpRequest(); // create a new XHR
@@ -127,25 +156,25 @@ void send() {
   */
   
   var s = "";
-  var value;
   for (var i = 0, total = shapes.length; i < total; i++) {
     if (i > 0) {
       s += "_";
     }
-    s += "255,0,0";
-    for (var j = 0, total2 = shapes[i].length; j < total2; j++) {
-      value = shapes[i][j]/canvasRect.width;
-      s += ","+value.toString();
-    }
+    s += shapes[i].stringFormat;
+  }
+  if (shapes.length > 0) {
+    var first = shapes.first.coords.first;
+    var last = shapes.last.coords.last;
+    s += "_0,0,0,"+(last.x/canvasRect.width).toString()+","+(last.y/canvasRect.height).toString()+","+(first.x/canvasRect.width).toString()+","+(first.y/canvasRect.width).toString();
   }
   
-  print(s);
-  
   try {
-    var url = "http://1.1.1.4:8910/actions";
+    //var url = "http://1.1.1.4:8910/actions";
+    var url = "http://localhost:8910/actions";
     request.open("POST", url, async: false);
     request.send(s);
   } catch (e) {
-    print(e);
+    //print(e);
   }
 }
+
