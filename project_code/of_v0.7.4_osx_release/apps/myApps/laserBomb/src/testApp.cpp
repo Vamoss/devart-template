@@ -1,33 +1,28 @@
 #include "testApp.h"
-#include "ofxSimpleGuiToo.h"
-#include "ofxIldaRenderTarget.h"
 
 
 extern "C" {
 	#include "macGlutfix.h"
 }
 
-// VARS
-ofxIlda::RenderTarget ildaFbo;
-ofxIlda::Frame ildaFrame;
-
-ofVec2f mouseDownPos;   // position of mouse (normalized)
-ofVec2f lastMouseDownPos; // last position of mouse (normalized)
-
-// PARAMS
-bool doFboClear;
-bool doDrawErase;   // whether we are erasing (true) or drawing (erase)
-int brushThickness;
-
 //--------------------------------------------------------------
 void testApp::setup(){
-    ofBackground(100);
+	
+	//UI
+	ofEnableAlphaBlending();
+    ofBackground(78);
+	logoX = 0;
+	logo.loadImage("gui/images/logo.png");
+	fboPosition.y = 60;
     
     etherdream.setup();
     etherdream.setPPS(20000);
     
     ildaFbo.setup(512, 512);
-    
+	
+	m_menu = new menu();
+	m_menu->setup(&ildaFbo, &ildaFrame);
+	
     gui.addTitle("INPUT");
     gui.addToggle("doFboClear c", doFboClear);
     gui.addToggle("doDrawErase x", doDrawErase);
@@ -91,6 +86,8 @@ void testApp::setup(){
 	//webServer
 	server.start("httpdocs");
 	server.addHandler(this, "actions*");
+	
+	layoutResize();
 
 }
 
@@ -109,6 +106,8 @@ void testApp::update(){
 	
 	
 	if (data!= NULL) tex.loadData(data, captureWidth, captureHeight, GL_RGBA);
+	
+	m_menu->update();
 }
 
 
@@ -136,15 +135,17 @@ void testApp::drawInFbo() {
 		//tex.draw(0,0, captureWidth, captureHeight);
 		
 		//custom draw
-        /*ofPushMatrix();
-        ofSetColor(doDrawErase ? 0 : 255);
+        ofPushMatrix();
+        ofPushStyle();
+		ofSetColor(doDrawErase ? 0 : 255);
 		ofFill();
         ofCircle(mouseDownPos.x*ildaFbo.getWidth(), mouseDownPos.y*ildaFbo.getHeight(), brushThickness/2.0f);
 		ofNoFill();
         //ofSetLineWidth(brushThickness*8.0f);
         //ofLine(mouseDownPos.x*ildaFbo.getWidth(),		mouseDownPos.y*ildaFbo.getHeight(),
 		//	   lastMouseDownPos.x*ildaFbo.getWidth(),	lastMouseDownPos.y*ildaFbo.getHeight());
-        ofPopMatrix();*/
+		ofPopStyle();
+        ofPopMatrix();
     }
 	
     ildaFbo.end();
@@ -156,7 +157,9 @@ void testApp::drawInFbo() {
 
 //--------------------------------------------------------------
 void testApp::draw() {
-	/*
+	
+	logo.draw(logoX,10);
+	
 	// clear the current frame
     ildaFrame.clear();
     
@@ -164,8 +167,7 @@ void testApp::draw() {
     ildaFbo.update(ildaFrame);  // vectorize and update the ildaFrame
     
     ildaFrame.update();
-	 */
-    
+	
 	
 	//custom shape test using ildaFrame
 	/*
@@ -210,14 +212,14 @@ void testApp::draw() {
 	*/
 	
 	//webService
-	ildaFrame.clear();
+	/*ildaFrame.clear();
 	ildaFrame.addPolys(receivedData);
-	ildaFrame.update();
+	ildaFrame.update();*/
 	
-    int dw = ofGetWidth()/2;
-    int dh = dw;
-    int dx = ofGetWidth() - dw;
-    int dy = 0;
+    int dw = fboPosition.width;
+    int dh = fboPosition.height;
+    int dx = fboPosition.x;
+    int dy = fboPosition.y;
 
     ildaFbo.draw(dx, dy, dw, dh);
     
@@ -227,7 +229,7 @@ void testApp::draw() {
     etherdream.setPoints(ildaFrame);
     
     // draw cursor
-    ofEnableAlphaBlending();
+    ofPushStyle();
     ofFill();
     ofSetColor(doDrawErase ? 0 : 255, 128);
     float r = brushThickness/2 * ofGetWidth() /2 / ildaFbo.getWidth();
@@ -235,8 +237,10 @@ void testApp::draw() {
     ofNoFill();
     ofSetColor(255, 128);
     ofCircle(ofGetMouseX(), ofGetMouseY(), r);
-	 
+	ofPopStyle();
+	
 	gui.draw();
+	m_menu->draw();
 }
 
 
@@ -258,15 +262,43 @@ void testApp::keyPressed(int key){
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
     lastMouseDownPos = mouseDownPos;
-    mouseDownPos.x = ofMap(x, ofGetWidth()/2, ofGetWidth(), 0, 1);
-    mouseDownPos.y = ofMap(y, 0, ofGetWidth()/2, 0, 1);
+    mouseDownPos.x = ofMap(x, fboPosition.x, fboPosition.x+fboPosition.width, 0, 1);
+    mouseDownPos.y = ofMap(y, fboPosition.y, fboPosition.y+fboPosition.height, 0, 1);
 }
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-    mouseDownPos.x = ofMap(x, ofGetWidth()/2, ofGetWidth(), 0, 1);
-    mouseDownPos.y = ofMap(y, 0, ofGetWidth()/2, 0, 1);
+    mouseDownPos.x = ofMap(x, fboPosition.x, fboPosition.x+fboPosition.width, 0, 1);
+    mouseDownPos.y = ofMap(y, fboPosition.y, fboPosition.y+fboPosition.height, 0, 1);
     lastMouseDownPos = mouseDownPos;
+}
+
+//--------------------------------------------------------------
+void testApp::windowResized(int w, int h){
+	layoutResize();
+}
+
+//--------------------------------------------------------------
+void testApp::layoutResize(){
+	int w = ofGetWidth();
+	int h = ofGetHeight();
+	
+	fboPosition.height = h-60;
+	fboPosition.width = fboPosition.height;
+	
+	int subPanelWidth = ofMap(ofGetWidth(), 800, 1920, 200, 400);
+	
+	int finalWidth = 60 + fboPosition.width + subPanelWidth;
+	if(finalWidth>w){
+		fboPosition.width = w - 60 - subPanelWidth;
+		fboPosition.height = fboPosition.width;
+		finalWidth = 60 + fboPosition.width + subPanelWidth;
+	}
+	
+	logoX = (w-finalWidth)/2;
+	m_menu->setX(logoX);
+	
+	fboPosition.x = logoX+60;
 }
 
 
