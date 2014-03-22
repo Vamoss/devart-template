@@ -412,13 +412,13 @@
 		07898F6118DBDD3F00F3A773 /* submenu */ = {
 			isa = PBXGroup;
 			children = (
+				07898F6318DBDD3F00F3A773 /* UI.h */,
 				07898F6418DBDD5000F3A773 /* modeUI.h */,
 				07898F6518DBDE2100F3A773 /* effectUI.h */,
 				07898F6618DBDE2100F3A773 /* outputUI.h */,
 				07898F6718DBDE2100F3A773 /* pathUI.h */,
 				07898F6818DBDE2100F3A773 /* saveUI.h */,
 				07898F6918DBDE2100F3A773 /* viewUI.h */,
-				07898F6318DBDD3F00F3A773 /* UI.h */,
 			);
 			path = submenu;
 			sourceTree = "<group>";

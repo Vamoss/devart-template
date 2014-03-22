@@ -8,6 +8,8 @@ extern "C" {
 //--------------------------------------------------------------
 void testApp::setup(){
 	
+	config::setup();
+	
 	//UI
 	ofEnableAlphaBlending();
     ofBackground(78);
@@ -218,6 +220,7 @@ void testApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
+	if(m_menu->isHit(x, y)) return;
     lastMouseDownPos = mouseDownPos;
     mouseDownPos.x = ofMap(x, fboPosition.x, fboPosition.x+fboPosition.width, 0, 1);
     mouseDownPos.y = ofMap(y, fboPosition.y, fboPosition.y+fboPosition.height, 0, 1);
@@ -225,6 +228,7 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
+	if(m_menu->isHit(x, y)) return;
     mouseDownPos.x = ofMap(x, fboPosition.x, fboPosition.x+fboPosition.width, 0, 1);
     mouseDownPos.y = ofMap(y, fboPosition.y, fboPosition.y+fboPosition.height, 0, 1);
     lastMouseDownPos = mouseDownPos;

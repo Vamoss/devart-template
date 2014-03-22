@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ofxUI.h"
 #include "config.h"
 #include "UI.h"
 
@@ -8,9 +7,9 @@ class pathUI : public UI {
     
 public:
     
-    void setup(ofxIlda::RenderTarget * ildaFbo, ofxIlda::Frame * ildaFrame)
+    void setup(ofColor color, ofxIlda::RenderTarget * ildaFbo, ofxIlda::Frame * ildaFrame)
     {
-		UI::setup(ildaFbo, ildaFrame);
+		UI::setup(220, 225, color, ildaFbo, ildaFrame);
 		
         setGUI1();
         
@@ -23,7 +22,7 @@ public:
 	
 	void setGUI1()
     {	
-		gui1 = new ofxUIScrollableCanvas(0, 0, 200, 768);
+		gui1->addLabel("PATH", OFX_UI_FONT_MEDIUM);
 		gui1->addSlider("Smooth Amount", 0.0, 100.0, ildaFrame->polyProcessor.params.smoothAmount);
 		gui1->addToggle("Contour Collapse", ildaFrame->polyProcessor.params.collapse);
 		gui1->addSlider("Optimize Tolerance", 0.0, 1.0, ildaFrame->polyProcessor.params.optimizeTolerance);

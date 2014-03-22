@@ -19,27 +19,27 @@ public:
    		int buttonSize = 60;
 		
 		buttonMode = new button();
-		buttonMode->setup("mode", 0, buttonSize*1,buttonSize,buttonSize,"gui/images/menu_mode.png",ofColor(12,56,64));
+		buttonMode->setup("mode", 0, buttonSize*1,buttonSize,buttonSize,"gui/images/menu_mode.png",config::menuColors[0]);
 		buttons.push_back(buttonMode);
 		
 		buttonEffect = new button();
-		buttonEffect->setup("effect", 0, buttonSize*2,buttonSize,buttonSize,"gui/images/menu_effect.png",ofColor(19,91,91));
+		buttonEffect->setup("effect", 0, buttonSize*2,buttonSize,buttonSize,"gui/images/menu_effect.png",config::menuColors[1]);
 		buttons.push_back(buttonEffect);
 		
 		buttonOutput = new button();
-		buttonOutput->setup("output", 0, buttonSize*3,buttonSize,buttonSize,"gui/images/menu_output.png",ofColor(22,115,105));
+		buttonOutput->setup("output", 0, buttonSize*3,buttonSize,buttonSize,"gui/images/menu_output.png",config::menuColors[2]);
 		buttons.push_back(buttonOutput);
 		
 		buttonPath = new button();
-		buttonPath->setup("path", 0, buttonSize*4,buttonSize,buttonSize,"gui/images/menu_path.png",ofColor(20,140,113));
+		buttonPath->setup("path", 0, buttonSize*4,buttonSize,buttonSize,"gui/images/menu_path.png",config::menuColors[3]);
 		buttons.push_back(buttonPath);
 		
 		buttonView = new button();
-		buttonView->setup("view", 0, buttonSize*5,buttonSize,buttonSize,"gui/images/menu_view.png",ofColor(23,154,113));
+		buttonView->setup("view", 0, buttonSize*5,buttonSize,buttonSize,"gui/images/menu_view.png",config::menuColors[4]);
 		buttons.push_back(buttonView);
 		
 		buttonSave = new button();
-		buttonSave->setup("save", 0, buttonSize*6,buttonSize,buttonSize,"gui/images/menu_save.png",ofColor(134,203,113));
+		buttonSave->setup("save", 0, buttonSize*6,buttonSize,buttonSize,"gui/images/menu_save.png",config::menuColors[5]);
 		buttons.push_back(buttonSave);
 		
 		for(int j=0; j<buttons.size(); j++){
@@ -65,8 +65,7 @@ public:
 		panels.push_back(panelSave);
 		
 		for(int i=0; i<panels.size(); i++) {
-			panels[i]->setup(ildaFbo, ildaFrame);
-			panels[i]->gui1->setVisible(false);
+			panels[i]->setup(config::menuColors[i], ildaFbo, ildaFrame);
 		}
 	}
 	
@@ -101,6 +100,14 @@ public:
 			buttons[i]->enable = state;
 			panels[i]->gui1->setVisible(state);
 		}
+	}
+	
+	bool isHit(int x, int y)
+	{
+		for(int i=0; i<panels.size(); i++) {
+			if(panels[i]->gui1->isHit(x, y)) return true;
+		}
+		return false;
 	}
 	
 private:

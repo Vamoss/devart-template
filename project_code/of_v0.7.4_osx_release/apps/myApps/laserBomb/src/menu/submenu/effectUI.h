@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ofxUI.h"
 #include "config.h"
 #include "UI.h"
 
@@ -8,9 +7,9 @@ class effectUI : public UI {
     
 public:
     
-    void setup(ofxIlda::RenderTarget * ildaFbo, ofxIlda::Frame * ildaFrame)
+    void setup(ofColor color, ofxIlda::RenderTarget * ildaFbo, ofxIlda::Frame * ildaFrame)
     {
-		UI::setup(ildaFbo, ildaFrame);
+		UI::setup(220, 450, color, ildaFbo, ildaFrame);
 		
         setGUI1();
         
@@ -19,10 +18,7 @@ public:
     
 	
 	void setGUI1()
-    {
-		int buttonSize = 60;
-		
-		gui1 = new ofxUIScrollableCanvas(0, 0, 200, 768);
+    {	
 		gui1->addLabel("EFFECT", OFX_UI_FONT_MEDIUM);
 		gui1->addSlider("Blur", 0.0, 20.0, ildaFbo->params.cv.blurAmount);
 		gui1->addSlider("Bottom Treshold", 0.0, 20.0, ildaFbo->params.cv.bottomThreshold);

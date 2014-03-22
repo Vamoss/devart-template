@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ofxUI.h"
 #include "config.h"
 #include "UI.h"
 
@@ -8,9 +7,9 @@ class saveUI : public UI {
     
 public:
     
-    void setup(ofxIlda::RenderTarget * ildaFbo, ofxIlda::Frame * ildaFrame)
+    void setup(ofColor color, ofxIlda::RenderTarget * ildaFbo, ofxIlda::Frame * ildaFrame)
     {
-		UI::setup(ildaFbo, ildaFrame);
+		UI::setup(220, 150, color, ildaFbo, ildaFrame);
 		
         setGUI1();
         
@@ -21,8 +20,8 @@ public:
 	void setGUI1()
     {
 		//TODO
-		gui1 = new ofxUIScrollableCanvas(0, 0, 200, 768);
-        
+		gui1->addLabel("SAVE", OFX_UI_FONT_MEDIUM);
+		
         ofAddListener(gui1->newGUIEvent,this,&saveUI::guiEvent);
     }
     
