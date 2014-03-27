@@ -23,6 +23,11 @@ public:
 
     ofxEtherdream etherdream;
 	
+	//modes
+	enum modes {DRAW, CAPTURE, RECEIVE};
+	modes mode;
+	void onModeChange(string & name);
+	
 	//screenCapture
 	ofTexture	tex;
 	int captureWidth;

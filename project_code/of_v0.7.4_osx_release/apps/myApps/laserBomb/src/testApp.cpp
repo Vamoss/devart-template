@@ -16,6 +16,8 @@ void testApp::setup(){
 	logoX = 0;
 	logo.loadImage("gui/images/logo.png");
 	fboPosition.y = 60;
+	
+	mode = DRAW;
     
     etherdream.setup();
     etherdream.setPPS(20000);
@@ -24,7 +26,8 @@ void testApp::setup(){
 	
 	m_menu = new menu();
 	m_menu->setup(&ildaFbo, &ildaFrame);
-    
+    ofAddListener(m_menu->panelMode->onChange, this, &testApp::onModeChange);
+	
     doFboClear = true;
 	
 	
@@ -75,11 +78,13 @@ void testApp::update(){
 void testApp::drawInFbo() {
     ofPushStyle();
     ildaFbo.begin();
+	
     if(doFboClear) {
         doFboClear = false;
         ofClear(0);
     }
-    if(ofGetMousePressed() &&  mouseDownPos.x >= 0) {
+	
+    if(mode==DRAW && ofGetMousePressed() &&  mouseDownPos.x >= 0) {
         //original
 		/*ofPushMatrix();
         ofScale(ildaFbo.getWidth(), ildaFbo.getHeight(), 1);
@@ -88,10 +93,6 @@ void testApp::drawInFbo() {
         ofLine(lastMouseDownPos, mouseDownPos);
         ofEllipse(mouseDownPos, brushThickness/2.0f/ildaFbo.getWidth(), brushThickness/2.0f/ildaFbo.getHeight());
         ofPopMatrix();*/
-		
-		
-		//screen capture
-		//tex.draw(0,0, captureWidth, captureHeight);
 		
 		//custom draw
         ofPushMatrix();
@@ -105,7 +106,10 @@ void testApp::drawInFbo() {
 		//	   lastMouseDownPos.x*ildaFbo.getWidth(),	lastMouseDownPos.y*ildaFbo.getHeight());
 		ofPopStyle();
         ofPopMatrix();
-    }
+    }else if(mode==CAPTURE){
+		//screen capture
+		tex.draw(0,0, captureWidth, captureHeight);
+	}
 	
     ildaFbo.end();
     ofPopStyle();
@@ -123,81 +127,33 @@ void testApp::draw() {
 	// clear the current frame
     ildaFrame.clear();
     
-    drawInFbo();    // draw stuff into the ildaRenderTarget
-    ildaFbo.update(ildaFrame);  // vectorize and update the ildaFrame
-    
+	if(mode==DRAW || mode==CAPTURE){
+		drawInFbo();    // draw stuff into the ildaRenderTarget
+		ildaFbo.update(ildaFrame);  // vectorize and update the ildaFrame
+    }else if(mode==RECEIVE){
+		ildaFrame.addPolys(receivedData);
+	}
     ildaFrame.update();
 	
-	
-	//custom shape test using ildaFrame
-	/*
-	ildaFrame.clear();
-	ofxIlda::Poly &poly = ildaFrame.addPoly(ofxIlda::Poly(ofColor(100,100,0)));
-	poly.lineTo(0.1f,0.0f);
-	poly.lineTo(0.1f,0.1f);
-	poly.lineTo(0.0f,0.1f);
-	poly.close();
-	ofxIlda::Poly &poly2 = ildaFrame.addPoly(ofxIlda::Poly(ofColor(100,0,0)));
-	poly2.lineTo(0.2f,0.0f);
-	poly2.lineTo(0.2f,0.2f);
-	poly2.lineTo(0.0f,0.2f);
-	poly2.close();
-	ofxIlda::Poly &poly3 = ildaFrame.addPoly(ofxIlda::Poly(ofColor(0,0,100)));
-	poly3.lineTo(0.4f,0.0f);
-	poly3.lineTo(0.4f,0.4f);
-	poly3.lineTo(0.0f,0.4f);
-	poly3.close();
-	ofxIlda::Poly &poly4 = ildaFrame.addPoly(ofxIlda::Poly(ofColor(0,100,0)));
-	poly4.lineTo(0.8f,0.0f);
-	poly4.lineTo(0.8f,0.8f);
-	poly4.lineTo(0.0f,0.8f);
-	poly4.close();
-	ildaFrame.update();
-    etherdream.setPoints(ildaFrame);
-	*/
-	
-	/*
-	//NOT WORKING
-	//custom shape test NOT using ildaFrame
-	vector<ofxIlda::Point> origPolys;
-	origPolys.push_back(ofxIlda::Point(ofPoint(0.1f,0.0f), ofColor(100,100,0)));
-	origPolys.push_back(ofxIlda::Point(ofPoint(0.1f,0.1f), ofColor(100,100,0)));
-	origPolys.push_back(ofxIlda::Point(ofPoint(0.0f,0.1f), ofColor(100,100,0)));
-	origPolys.push_back(ofxIlda::Point(ofPoint(0.0f,0.0f), ofColor(100,100,0)));
-	origPolys.push_back(ofxIlda::Point(ofPoint(0.2f,0.0f), ofColor(100,0,0)));
-	origPolys.push_back(ofxIlda::Point(ofPoint(0.2f,0.2f), ofColor(100,0,0)));
-	origPolys.push_back(ofxIlda::Point(ofPoint(0.0f,0.2f), ofColor(100,0,0)));
-	origPolys.push_back(ofxIlda::Point(ofPoint(0.0f,0.0f), ofColor(100,0,0)));
-	etherdream.setPoints(origPolys);
-	*/
-	
-	//webService
-	/*ildaFrame.clear();
-	ildaFrame.addPolys(receivedData);
-	ildaFrame.update();*/
-	
-    int dw = fboPosition.width;
-    int dh = fboPosition.height;
-    int dx = fboPosition.x;
-    int dy = fboPosition.y;
-
-    ildaFbo.draw(dx, dy, dw, dh);
+    ildaFbo.draw(fboPosition.x, fboPosition.y, fboPosition.width, fboPosition.height);
     
     ofSetColor(0, 255, 0);
-    ildaFrame.draw(dx, dy, dw, dh);
+    ildaFrame.draw(fboPosition.x, fboPosition.y, fboPosition.width, fboPosition.height);
     
     etherdream.setPoints(ildaFrame);
     
-    // draw cursor
-    ofPushStyle();
-    ofFill();
-    ofSetColor(doDrawErase ? 0 : 255, 128);
-    float r = brushThickness/2 * ofGetWidth() /2 / ildaFbo.getWidth();
-    ofCircle(ofGetMouseX(), ofGetMouseY(), r);
-    ofNoFill();
-    ofSetColor(255, 128);
-    ofCircle(ofGetMouseX(), ofGetMouseY(), r);
-	ofPopStyle();
+	if(mode==DRAW){
+		// draw cursor
+		ofPushStyle();
+		ofFill();
+		ofSetColor(doDrawErase ? 0 : 255, 128);
+		float r = brushThickness/2 * ofGetWidth() /2 / ildaFbo.getWidth();
+		ofCircle(ofGetMouseX(), ofGetMouseY(), r);
+		ofNoFill();
+		ofSetColor(255, 128);
+		ofCircle(ofGetMouseX(), ofGetMouseY(), r);
+		ofPopStyle();
+	}
 	
 	m_menu->draw();
 }
@@ -220,7 +176,7 @@ void testApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
-	if(m_menu->isHit(x, y)) return;
+	if(m_menu->isHit(x, y) || mode!=DRAW) return;
     lastMouseDownPos = mouseDownPos;
     mouseDownPos.x = ofMap(x, fboPosition.x, fboPosition.x+fboPosition.width, 0, 1);
     mouseDownPos.y = ofMap(y, fboPosition.y, fboPosition.y+fboPosition.height, 0, 1);
@@ -228,7 +184,7 @@ void testApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-	if(m_menu->isHit(x, y)) return;
+	if(m_menu->isHit(x, y) || mode!=DRAW) return;
     mouseDownPos.x = ofMap(x, fboPosition.x, fboPosition.x+fboPosition.width, 0, 1);
     mouseDownPos.y = ofMap(y, fboPosition.y, fboPosition.y+fboPosition.height, 0, 1);
     lastMouseDownPos = mouseDownPos;
@@ -260,6 +216,21 @@ void testApp::layoutResize(){
 	m_menu->setX(logoX);
 	
 	fboPosition.x = logoX+60;
+}
+
+
+
+//--------------------------------------------------------------
+void testApp::onModeChange(string & name)
+{
+	cout << "mode changed " << name << endl;
+	if(name=="DRAW"){
+		mode = DRAW;
+	}else if(name=="SCREEN CAPTURE"){
+		mode = CAPTURE;
+	}else if(name=="HTTP RECEIVER"){
+		mode = RECEIVE;
+	}
 }
 
 

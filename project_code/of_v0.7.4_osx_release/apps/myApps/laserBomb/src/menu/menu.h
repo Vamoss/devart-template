@@ -110,8 +110,6 @@ public:
 		return false;
 	}
 	
-private:
-	
 	button * buttonMode;
 	button * buttonEffect;
 	button * buttonOutput;
