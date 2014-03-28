@@ -1,15 +1,15 @@
 #pragma once
 
 #include "config.h"
-#include "UI.h"
+#include "menuUI.h"
 
-class saveUI : public UI {
+class saveUI : public menuUI {
     
 public:
     
     void setup(ofColor color, ofxIlda::RenderTarget * ildaFbo, ofxIlda::Frame * ildaFrame)
     {
-		UI::setup(220, 150, color, ildaFbo, ildaFrame);
+		menuUI::setup(220, 150, color, ildaFbo, ildaFrame);
 		
         setGUI1();
         
@@ -21,6 +21,7 @@ public:
     {
 		//TODO
 		gui1->addLabel("SAVE", OFX_UI_FONT_MEDIUM);
+		gui1->addLabel("COMING SOON", OFX_UI_FONT_SMALL);
 		
         ofAddListener(gui1->newGUIEvent,this,&saveUI::guiEvent);
     }

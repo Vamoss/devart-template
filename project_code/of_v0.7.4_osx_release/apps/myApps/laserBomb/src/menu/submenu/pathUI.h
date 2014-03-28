@@ -1,15 +1,15 @@
 #pragma once
 
 #include "config.h"
-#include "UI.h"
+#include "menuUI.h"
 
-class pathUI : public UI {
+class pathUI : public menuUI {
     
 public:
     
     void setup(ofColor color, ofxIlda::RenderTarget * ildaFbo, ofxIlda::Frame * ildaFrame)
     {
-		UI::setup(220, 225, color, ildaFbo, ildaFrame);
+		menuUI::setup(220, 225, color, ildaFbo, ildaFrame);
 		
         setGUI1();
         

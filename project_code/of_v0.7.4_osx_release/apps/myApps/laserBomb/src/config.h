@@ -10,6 +10,8 @@ public:
 	static int UIHeight;
 	static int UIWidth;
 	
+	static int receiverPort;
+	
 	static vector<ofColor> menuColors;
 	
 	static void setup();

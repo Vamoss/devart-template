@@ -4,6 +4,7 @@
 #include "ofxEtherdream.h"
 #include "ofxWebServer.h"
 #include "menu.h"
+#include "sidebar.h"
 #include "ofxIldaRenderTarget.h"
 
 class testApp : public ofBaseApp, public ofxWSRequestHandler{
@@ -29,6 +30,7 @@ public:
 	void onModeChange(string & name);
 	
 	//screenCapture
+	ofRectangle captureDrawPosition;
 	ofTexture	tex;
 	int captureWidth;
 	int captureHeight;
@@ -38,6 +40,8 @@ public:
 	ofImage logo;
 	int logoX;
 	ofRectangle fboPosition;
+	float fboScale;
+	sidebar * m_sidebar;
 	
 	
 	//webServer

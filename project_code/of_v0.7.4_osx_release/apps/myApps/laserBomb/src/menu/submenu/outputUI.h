@@ -1,15 +1,15 @@
 #pragma once
 
 #include "config.h"
-#include "UI.h"
+#include "menuUI.h"
 
-class outputUI : public UI {
+class outputUI : public menuUI {
     
 public:
     
     void setup(ofColor color, ofxIlda::RenderTarget * ildaFbo, ofxIlda::Frame * ildaFrame)
     {
-		UI::setup(220, 290, color, ildaFbo, ildaFrame);
+		menuUI::setup(220, 170, color, ildaFbo, ildaFrame);
 		
         setGUI1();
         
@@ -20,9 +20,6 @@ public:
 	void setGUI1()
     {
 		gui1->addLabel("OUTPUT", OFX_UI_FONT_MEDIUM);
-		gui1->addSlider("Line Red", 0.0, 1.0, ildaFrame->params.output.color.r);
-		gui1->addSlider("Line Green", 0.0, 1.0, ildaFrame->params.output.color.g);
-		gui1->addSlider("Line Blue", 0.0, 1.0, ildaFrame->params.output.color.b);
 		gui1->addSlider("Blank Count", 0.0, 100.0, ildaFrame->params.output.blankCount);
 		gui1->addSlider("End Count", 0.0, 100.0, ildaFrame->params.output.endCount);
 		gui1->addToggle("Cap X", ildaFrame->params.output.doCapX);

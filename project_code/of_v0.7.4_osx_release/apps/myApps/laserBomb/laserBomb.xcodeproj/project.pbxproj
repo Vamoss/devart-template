@@ -104,13 +104,14 @@
 		01dcc0911400f9acf5b65578af4ec8f9 /* ofxXmlSettings.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxXmlSettings.h; path = ../../../addons/ofxXmlSettings/src/ofxXmlSettings.h; sourceTree = SOURCE_ROOT; };
 		029684cf678f70f6d3537a29773654a6 /* OscOutboundPacketStream.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OscOutboundPacketStream.h; path = ../../../addons/ofxOsc/libs/oscpack/src/osc/OscOutboundPacketStream.h; sourceTree = SOURCE_ROOT; };
 		057122a817d12571f8c0c7a4d522b879 /* ofxCvGrayscaleImage.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxCvGrayscaleImage.cpp; path = ../../../addons/ofxOpenCv/src/ofxCvGrayscaleImage.cpp; sourceTree = SOURCE_ROOT; };
+		07240CA918E51ACE0048AD60 /* cropper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cropper.h; sourceTree = "<group>"; };
+		07240CAA18E51ACE0048AD60 /* ofxUIFbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUIFbo.h; sourceTree = "<group>"; };
 		0750E85D18D797F20039AAB7 /* ofxMSAInteractiveObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxMSAInteractiveObject.cpp; sourceTree = "<group>"; };
 		0750E85E18D797F20039AAB7 /* ofxMSAInteractiveObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxMSAInteractiveObject.h; sourceTree = "<group>"; };
 		0750E86018D7D0C70039AAB7 /* macGlutfix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = macGlutfix.h; sourceTree = "<group>"; };
 		0750E86118D7D0C70039AAB7 /* macGlutfix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = macGlutfix.m; sourceTree = "<group>"; };
 		07898F5F18DBC44C00F3A773 /* button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = button.h; sourceTree = "<group>"; };
 		07898F6018DBCCB700F3A773 /* menu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = menu.h; sourceTree = "<group>"; };
-		07898F6318DBDD3F00F3A773 /* UI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UI.h; sourceTree = "<group>"; };
 		07898F6418DBDD5000F3A773 /* modeUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modeUI.h; sourceTree = "<group>"; };
 		07898F6518DBDE2100F3A773 /* effectUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = effectUI.h; sourceTree = "<group>"; };
 		07898F6618DBDE2100F3A773 /* outputUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = outputUI.h; sourceTree = "<group>"; };
@@ -158,6 +159,12 @@
 		078990B118DBE85B00F3A773 /* ofxUIWaveform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUIWaveform.h; sourceTree = "<group>"; };
 		078990B218DBE85B00F3A773 /* ofxUIWidget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUIWidget.h; sourceTree = "<group>"; };
 		078990B318DBE85B00F3A773 /* ofxUIWidgetWithLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxUIWidgetWithLabel.h; sourceTree = "<group>"; };
+		07A08A4E18E3A9AC00F68E29 /* sidebar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sidebar.h; path = sidebar/sidebar.h; sourceTree = "<group>"; };
+		07A08A4F18E3A9D900F68E29 /* menuUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = menuUI.h; sourceTree = "<group>"; };
+		07A08A5018E3AA2B00F68E29 /* captureUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = captureUI.h; path = sidebar/captureUI.h; sourceTree = "<group>"; };
+		07A08A5118E3AA2B00F68E29 /* drawUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = drawUI.h; path = sidebar/drawUI.h; sourceTree = "<group>"; };
+		07A08A5218E3AA2B00F68E29 /* receiveUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = receiveUI.h; path = sidebar/receiveUI.h; sourceTree = "<group>"; };
+		07A08A5318E3AA2B00F68E29 /* sidebarUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sidebarUI.h; path = sidebar/sidebarUI.h; sourceTree = "<group>"; };
 		07E091CA18DBA64D00C1EB67 /* config.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = config.cpp; sourceTree = "<group>"; };
 		07E091CB18DBA64D00C1EB67 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		07ED248F18DA254E00E0090F /* laserBombDebug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = laserBombDebug.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -412,7 +419,7 @@
 		07898F6118DBDD3F00F3A773 /* submenu */ = {
 			isa = PBXGroup;
 			children = (
-				07898F6318DBDD3F00F3A773 /* UI.h */,
+				07A08A4F18E3A9D900F68E29 /* menuUI.h */,
 				07898F6418DBDD5000F3A773 /* modeUI.h */,
 				07898F6518DBDE2100F3A773 /* effectUI.h */,
 				07898F6618DBDE2100F3A773 /* outputUI.h */,
@@ -470,6 +477,19 @@
 			);
 			name = src;
 			path = ../../../addons/ofxUI/src;
+			sourceTree = "<group>";
+		};
+		07A08A4D18E3A97C00F68E29 /* sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				07A08A4E18E3A9AC00F68E29 /* sidebar.h */,
+				07A08A5318E3AA2B00F68E29 /* sidebarUI.h */,
+				07A08A5018E3AA2B00F68E29 /* captureUI.h */,
+				07A08A5118E3AA2B00F68E29 /* drawUI.h */,
+				07A08A5218E3AA2B00F68E29 /* receiveUI.h */,
+			);
+			name = sidebar;
+			path = src;
 			sourceTree = "<group>";
 		};
 		07E0913C18DBA50B00C1EB67 /* ofxUI */ = {
@@ -882,6 +902,7 @@
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
+				07A08A4D18E3A97C00F68E29 /* sidebar */,
 				E4EEC9E9138DF44700A80321 /* openFrameworks */,
 				BB4B014C10F69532006C3DED /* addons */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
@@ -899,6 +920,8 @@
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
 				0750E86018D7D0C70039AAB7 /* macGlutfix.h */,
 				0750E86118D7D0C70039AAB7 /* macGlutfix.m */,
+				07240CA918E51ACE0048AD60 /* cropper.h */,
+				07240CAA18E51ACE0048AD60 /* ofxUIFbo.h */,
 				07898F5C18DBC42B00F3A773 /* menu */,
 			);
 			path = src;

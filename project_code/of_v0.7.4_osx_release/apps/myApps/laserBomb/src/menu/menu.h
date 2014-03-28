@@ -2,7 +2,7 @@
 
 #include "config.h"
 #include "button.h"
-#include "UI.h"
+#include "menuUI.h"
 #include "modeUI.h"
 #include "effectUI.h"
 #include "outputUI.h"
@@ -127,5 +127,5 @@ public:
 	viewUI * panelView;
 	saveUI * panelSave;
     
-	vector<UI *> panels;
+	vector<menuUI *> panels;
 };

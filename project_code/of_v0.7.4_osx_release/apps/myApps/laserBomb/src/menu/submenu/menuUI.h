@@ -3,7 +3,7 @@
 #include "ofxUI.h"
 #include "ofxIldaRenderTarget.h"
 
-class UI {
+class menuUI {
     
 public:
     

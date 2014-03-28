@@ -6,6 +6,7 @@ int config::UISpace = 5;
 int config::UIHeight = 16;
 int config::UIWidth = config::columnWidth - 40;
 vector<ofColor> config::menuColors;
+int config::receiverPort = 8910;
 
 void config::setup(){
 	config::menuColors.push_back(ofColor(12,56,64));
