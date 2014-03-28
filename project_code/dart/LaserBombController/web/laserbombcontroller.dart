@@ -2,12 +2,12 @@ import 'dart:html';
 
 
 // protocol
-// x,y,x,y,x,y,x,y_x,y,x,y,x,y_x,y,x,y,x,y;
+// r,g,b,x,y,x,y,x,y,x,y_r,g,b,x,y,x,y,x,y_r,g,b,x,y,x,y,x,y;
 
 var shapes = new List<Shape>();
 var dragging = false;
 
-var currentColor = new Color(255, 255, 255);
+var currentColorElement;
  
 var canvasRect;
 final CanvasRenderingContext2D context = (querySelector("#canvas") as CanvasElement).context2D;
@@ -59,6 +59,12 @@ class Shape {
 //-----------------------------------
 void main() {
 
+  currentColorElement = querySelector("#colors li:first-child");
+  currentColorElement.className = "selected";
+
+  querySelector("#colors").onClick.listen(onClickColor);
+  querySelector("#clean").onClick.listen(onClickClean);
+
   canvasRect = context.canvas.getBoundingClientRect();
 
   context.canvas..onMouseDown.listen(onMouseDown)
@@ -66,9 +72,6 @@ void main() {
       ..onMouseUp.listen(onMouseUp)
       ..onMouseOut.listen(onMouseUp);
   querySelector("body").onMouseUp.listen(onMouseUp);
-
-  querySelector("#colors").onClick.listen(onClickColor);
-  querySelector("#clean").onClick.listen(onClickClean);
 
   clean();
 }
@@ -107,7 +110,10 @@ void newShape(x, y) {
     shapes.add(new Shape(new Color(0,0,0), lastPoint.x, lastPoint.y));
     shapes.last.add(x, y);
   }
-  shapes.add(new Shape(currentColor, x, y));
+  
+  var data = currentColorElement.dataset;
+  var color = new Color(data["r"], data["g"], data["b"]);
+  shapes.add(new Shape(color, x, y));
 }
 
 void addPoint(x, y) {
@@ -132,8 +138,13 @@ void onMouseUp(MouseEvent e) {
 }
 
 void onClickColor(MouseEvent e) {
-  var data = (e.target as Element).dataset;
-  currentColor = new Color(data["r"], data["g"], data["b"]);
+  var elem = e.target as Element;
+  print(elem.tagName);
+  if (elem.tagName == "LI") {
+    currentColorElement.className = "";
+    currentColorElement = elem;
+    currentColorElement.className = "selected";
+  }
 }
 
 void onClickClean(MouseEvent e) {

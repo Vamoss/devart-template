@@ -1,42 +1,52 @@
 
 body {
-  background-color: #F8F8F8;
+  background-color: #5C5D5F;
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
   font-weight: normal;
   line-height: 1.2em;
-  margin: 20px;
-  overflow: hidden;
+  margin: 20px auto;
+  width: 500px;
 }
 
 h1, p {
-  color: #333;
-  margin:10px 0;
+  color: #fff;
+  margin: 0;
 }
 
 #canvas {
   background-color: #000;
   cursor: pointer;
-  margin:10px 0;
+  float: left;
 }
 
+#sidebar {
+  float: left;
+  height: 400px;
+  width: 50px;
+  margin-left: 15px;
+}
 #colors {
   padding: 0;
   margin: 0;
-  width:280px;
-  height:40px;
-  float: left;
-  border: 1px solid #000;
 }
 #colors li {
-  width:40px;
-  height:40px;
-  floar:left;
+  width:39px;
+  height:39px;
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 3px;
   display:inline-block;
   cursor:pointer;
+  border-radius: 50%;
+  border: 1px solid #000000;
+}
+#colors li.selected {
+  border: 4px solid #000000;
+  margin: 0;
+}
+#white {
+  background-color:#ffffff;
 }
 #red {
   background-color:#ff0000;
@@ -58,14 +68,13 @@ h1, p {
 }
 
 #clean {
-  width:100px;
-  height:40px;
-  line-height:40px;
+  padding: 11px 0 0 12px;
+  width: 30px;
+  height: 29px;
   border: 1px solid #000;
-  float:left;
-  text-align:center;
-  margin-left:15px;
   cursor:pointer;
+  margin: 8px 1px;
+  background-color: #cccccc;
 }
 
 

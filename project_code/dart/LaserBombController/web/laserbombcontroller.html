@@ -8,23 +8,22 @@
     <link rel="stylesheet" href="laserbombcontroller.css">
   </head>
   <body>
-    <h1>LaserBombController</h1>
+    <h1><img src="images/logo.png"></h1>
     
     <canvas id="canvas" width="400" height="400"></canvas>
     
-    <br>
-    
-    <ul id="colors">
-      <li id="white" data-r="255" data-g="255" data-b="255"/>
-      <li id="yellow" data-r="255" data-g="255" data-b="0"/>
-      <li id="green" data-r="0" data-g="255" data-b="0"/>
-      <li id="cyan" data-r="0" data-g="255" data-b="255"/>
-      <li id="blue" data-r="0" data-g="0" data-b="255"/>
-      <li id="magenta" data-r="255" data-g="0" data-b="255"/>
-      <li id="red" data-r="255" data-g="0" data-b="0"/>
-    </ul>
-    
-    <div id="clean" data-r="0" data-g="0" data-b="0">CLEAN</div>
+    <div id="sidebar">
+      <ul id="colors">
+        <li id="white" data-r="255" data-g="255" data-b="255"/>
+        <li id="red" data-r="255" data-g="0" data-b="0"/>
+        <li id="magenta" data-r="255" data-g="0" data-b="255"/>
+        <li id="yellow" data-r="255" data-g="255" data-b="0"/>
+        <li id="green" data-r="0" data-g="255" data-b="0"/>
+        <li id="cyan" data-r="0" data-g="255" data-b="255"/>
+        <li id="blue" data-r="0" data-g="0" data-b="255"/>
+      </ul>
+      <div id="clean" data-r="0" data-g="0" data-b="0"><img src="images/clean.png"></div>
+    </div>
     
     <script type="application/dart" src="laserbombcontroller.dart"></script>
     <script src="packages/browser/dart.js"></script>
